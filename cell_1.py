@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-definination for error, score, and accuracy
+definition for error, score, and accuracy
 """
 
 import os, datetime
