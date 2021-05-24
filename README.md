@@ -13,6 +13,9 @@ Time-varying operational conditions result in two main problems for RUL predicti
 - 4.GRU 
 
 **results:**
+
 ![image](https://user-images.githubusercontent.com/33688975/119366913-06f1b000-bce4-11eb-9ba2-9b198d3fcb85.png)
+
+Figure. RUL results, a)FD001, b)FD002, c)FD003, D)FD004.
 
 **Details will be updated as soon as the paper accepted.**
