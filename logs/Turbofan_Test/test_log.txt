@@ -1,0 +1,1 @@
+{"Step": [], "Epoch_Number": [], "Batch_number": [], "Loss": []}
