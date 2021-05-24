@@ -1,1 +1,0 @@
-{"number_steps_train": 1, "cell_type": "GRU", "dropout_train": 0.5, "hidden_size": 256, "kernel_size": 10, "num_layers": 2, "lr": 0.0001, "batch_size": 256, "num_epoch": 200}
