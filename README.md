@@ -1,16 +1,18 @@
-# RUL-prediction-for-aircraft-turbofan-engine
-take the varying operational conditions into considerration for RUL prediction
+## Remaining Useful Life (RUL) Prediction for Turbofan Engines considering time-varying operating conditions
+RUL Prediction for Turbofan Engines (CMPASS dataset) 
 
-cell_1 : definition for error, score, and accuracy
+**Key Words**: Remaining useful life; Time-varying operational conditions; Density-based clustering; Modified normalization method; Operational condition features; Turbofan engine data 
 
-cell_2: Class Trainer()
+**Motivation：**
+Time-varying operational conditions result in two main problems for RUL predictions: varying degradation rates and abrupt jumps in the amplitude of sensor readings. These two effects are addressed separately by introducing additionally operational condition features and a multi-operational condition-based normalization method. 
 
-cell_3: Class RNNModel()
+**Methods：**
+- 1.DPCA-HDBSCAN for clustering operating conditions
+- 2.additional operating condition features
+- 3.modified normalization method
+- 4.GRU 
 
-cell_4: Class RNNTrainer(Trainer)
+**results:**
+![image](https://user-images.githubusercontent.com/33688975/119366913-06f1b000-bce4-11eb-9ba2-9b198d3fcb85.png)
 
-cell_5：Class FileLogger()
-
-cell_6: Class DataReader()
-
-cell_7: main
+**Details will be updated as soon as the paper accepted.**
