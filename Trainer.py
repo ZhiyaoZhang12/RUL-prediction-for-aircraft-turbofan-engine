@@ -27,7 +27,7 @@ def cra_function(df, y_predicted, y_true):
 
 def score_function(df, label, alpha1=13, alpha2=10):
     if df[label] <= 0:
-        return (np.exp(-(df[label] / alpha1)) - 1)
+        return (np.exp(-(df[label] / alpha1)) - 1)  
 
     elif df[label] > 0:
         return (np.exp((df[label] / alpha2)) - 1)
@@ -43,7 +43,7 @@ def accuracy_function(df, label, alpha1=13, alpha2=10):
 class Trainer(object):
     def __init__(self,
                  dataset_name,
-                 feature_used,
+                 columns_used,
                  sensor_feature_used,
                  train_path,
                  test_path,
@@ -61,7 +61,7 @@ class Trainer(object):
         self.datareader = DataReader(train_path,
                                      test_path,
                                      dataset_name,
-                                     feature_used,
+                                     columns_used,
                                      sensor_feature_used,
                                      is_MOC_normal = is_MOC_normal,
                                      **kwargs)
@@ -132,17 +132,10 @@ class Trainer(object):
                 total_train_loss = 0
 
                 for batch_train in batch_train_range:
-#                     batch_train_range.set_description("Training on %i points --- " % self.datareader.train_length)
-
                     self.model.train()
 
                     loss, total_loss = self.training_step()
-
                     total_train_loss += total_loss
-
-#                     batch_train_range.set_postfix(MSE=loss,
-#                                                   Last_batch_MSE=train_loss,
-#                                                   Epoch=epoch)
 
                     self.tensorboard.add_scalar('Training Mean Squared Error loss per batch',
                                                 loss,
@@ -207,7 +200,7 @@ class Trainer(object):
                     print('{} epoch, validation_loss'.format(epoch + 1), validation_loss,file=doc)
                     doc.close()
                     
-                    ## ealy end (add in 2021.0817)
+                    ## ealy stop (added in 2021.0817)
                     if epoch >= 1:
                         if best_validation_loss/previous_best_loss < 0.1:
                             print('-------------------------- early stop! --------------------------')
@@ -317,16 +310,7 @@ class Trainer(object):
         
         
             if result < best:
-                best = result
-                
-                # if load_or_save == 'load':
-                #     doc=open('./results/%s/2.txt'
-                #          %(self.dataset_name),'a')   
-
-                #     print('validation_loss', result,file=doc)
-                #     doc.close()
-    #                print("validation_loss recored")
-                    
+                best = result                    
                 best_file = file
 
         if load_or_save == 'load':

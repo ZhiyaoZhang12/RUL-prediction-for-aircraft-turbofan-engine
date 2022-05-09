@@ -5,7 +5,7 @@ from sklearn.preprocessing import MinMaxScaler, StandardScaler, LabelBinarizer
 from sklearn.model_selection import KFold
 from sklearn.model_selection import train_test_split
 from sklearn.utils import shuffle
-import hdbscan
+#import hdbscan
 
 SEED = 1337
 
@@ -21,7 +21,7 @@ class DataReader(object):
                  raw_data_path_train,
                  raw_data_path_test,
                  dataset_name,
-                 feature_used,
+                 columns_used,
                  sensor_feature_used,
                  is_MOC_normal,
                  **kwargs):
@@ -32,15 +32,17 @@ class DataReader(object):
         self.train = self.loader_train()
         self.test = self.loader_test()
         self.dataset_name = dataset_name
-        self.feature_used = feature_used
+        self.columns_used = columns_used
         self.sensor_feature_used = sensor_feature_used
         self.is_MOC_normal = is_MOC_normal
+        
 
 
     def loader_engine(self, **kwargs):
         if self.raw_data_path_train.lower().endswith(('.csv')):
-            self.loader_train = lambda: pd.read_csv(self.raw_data_path_train, header = 0, index_col= ['dataset_id','unit_id'], **kwargs)
-            self.loader_test = lambda: pd.read_csv(self.raw_data_path_test,header = 0, index_col= ['dataset_id','unit_id'], **kwargs)
+            self.loader_train = lambda: pd.read_csv(self.raw_data_path_train, header=0, index_col= ['dataset_id','unit_id'], **kwargs)
+            self.loader_test = lambda: pd.read_csv(self.raw_data_path_test,header=0, index_col= ['dataset_id','unit_id'], **kwargs)
+
         elif self.raw_data_path_train.lower().endswith(('.parquet')):
             self.loader_train = lambda: pd.read_parquet(self.raw_data_path_train, **kwargs)
             self.loader_test = lambda: pd.read_parquet(self.raw_data_path_test, **kwargs)
@@ -54,29 +56,7 @@ class DataReader(object):
 
     def calculate_unique_turbines(self):
         self.train_turbines = np.arange(len(self.train.index.to_series().unique()))
-        self.test_turbines = np.arange(len(self.test.index.to_series().unique()))
-
-
-    def cluestering(self, train, validation, test=None, min_cluster_size=100):
-
-        clusterer = hdbscan.HDBSCAN(min_cluster_size=min_cluster_size, prediction_data=True).fit(
-            train[['setting 1', 'setting 2', 'setting 3']])
-
-        train_labels, strengths = hdbscan.approximate_predict(clusterer, train[['setting 1', 'setting 2', 'setting 3']])
-        validation_labels, strengths = hdbscan.approximate_predict(clusterer,
-                                                                   validation[['setting 1', 'setting 2', 'setting 3']])
-
-        train['HDBScan'] = train_labels
-        validation['HDBScan'] = validation_labels
-
-        if test is not None:
-            test_labels, strengths = hdbscan.approximate_predict(clusterer,
-                                                                 test[['setting 1', 'setting 2', 'setting 3']])
-            test['HDBScan'] = test_labels
-
-            return train, validation, test
-        else:
-            return train, validation
+        self.test_turbines = np.arange(len(self.test.index.to_series().unique()))           
 
 
     def normalize_by_type(self, train, validation, normalization, test=None):
@@ -175,7 +155,7 @@ class DataReader(object):
         
 
     ###one-hot coding
-    def binarize(self, train, validation, test=None):
+    def onehot_coding(self, train, validation, test=None):
         
         n = len(train.groupby('HDBScan'))
         setting_operational = ["setting_op {}".format(s) for s in range(1, n+1)]
@@ -263,6 +243,7 @@ class DataReader(object):
         op_train_factors = []
         for i,data in enumerate(setting_train_normal):
             op_train_factors.append(((data[0]**2+data[1]**2+data[2]**2)/3)**0.5)
+            
         train['op factor'] = op_train_factors
         
         op_validation_factors = []
@@ -294,23 +275,25 @@ class DataReader(object):
         validation = self.train.loc[idx_validation]
         test = self.test.loc[idx_test]
         
-        if 'op factor' in self.feature_used:
+        if 'op factor' in self.columns_used:
             train,validation,test = self.op_factors(train, validation,test)
         else:
             pass
         
         ##one-hot coding
-        if 'setting_op 1' in self.feature_used:
-            train, validation, test = self.binarize(train, validation, test) #one-hot coding
+        if 'setting_op 1' in self.columns_used:
+            train, validation, test = self.onehot_coding(train, validation, test) #one-hot coding
         else:
             pass
 
         train, validation, test = self.normalize_by_type(train, validation, normalization, test)
 
+
         # ouly retain the feature we choose
-        train = train[self.feature_used]
-        validation = validation[self.feature_used]
-        test = test[self.feature_used]
+        train = train[self.columns_used]
+        validation = validation[self.columns_used]
+        test = test[self.columns_used]
+
 
         self.train_data, self.train_label_data = self.transform_data(train, number_steps_train)
         self.validation_data, self.validation_label_data  = self.transform_data(validation, number_steps_train)
