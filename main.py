@@ -9,24 +9,24 @@ import pandas as pd
 from preprocessing import Preprocessing
 
 
-n = 1
+n = 10
 for i in range(n):
     
     print('\n')
     print('This is the {} run'.format(i+1))
     
     
-    #dataset_name, total_steps =  'FD001', 6000
+    dataset_name, total_steps =  'FD001', 6000
     #dataset_name, total_steps = 'FD002', 6000
     #dataset_name, total_steps =  'FD003', 6000
-    dataset_name, total_steps =  'FD004', 12000
+    #dataset_name, total_steps =  'FD004', 12000
     
     
     window_size = 40   
     Loss_function = 'SCORE'  #score,mse,mae
-    dropout_train = 0.5     ### default = 0,0.5
+    dropout_train = 0.5     
     NN_type = 'GRU'  #LSTM, GRU, RNN
-    num_layers = 2  #2
+    num_layers = 2  
     sensor_feature_used = ['sensor 2', 'sensor 3', 'sensor 4', 'sensor 7', 'sensor 8', 'sensor 9',
         'sensor 11', 'sensor 12', 'sensor 13', 'sensor 14', 'sensor 15',
         'sensor 17', 'sensor 20', 'sensor 21']
@@ -121,59 +121,11 @@ for i in range(n):
          'patience',patience,'\n',
          'is_MOC_normal',is_MOC_normal,'\n',
          'columns used',columns_used,'\n',
-         '='*36)
-       
-    
-    # save performance in txt file 
-    doc=open('./results/%s/2.txt'
-              %(dataset_name),'a')   
-    print('\n',file = doc)
-    print(dataset_name,file=doc)
-    print('='*36,file=doc)
-    print('Score:\t\t%.4f'% score,file=doc)
-    print('Accuracy:\t%.4f'% (results['Accuracy'].mean()*100),file=doc )
-    print('RMSE:\t\t%.4f'% np.sqrt(mse),file=doc)
-    print('mse:\t\t%.4f'% mse,file=doc)
-    print('mae:\t\t%.4f'% mae,file=doc)
-    print('score_avg:\t%.4f'% results['Score'].mean(),file=doc)
-    print('R2:\t\t%.4f'% r2,file=doc)
-    print('CRA:\t\t%.4f'% cra,file=doc)
-    print('dropout:\t\t%.1f'% dropout_train,file=doc)
-    print('window_size:  ', window_size,file=doc)
-    print('loss function:  ', Loss_function,file=doc)
-    print('NN_type:  ', NN_type,file=doc)
-    print('NN layers:  ',num_layers,file=doc)
-    print('Num feature:  ',num_input,file=doc)
-    print('patience:  ',patience,file=doc)
-    print('is_MOC_normal:  ',is_MOC_normal,file=doc)
-    print('columns used:  ',columns_used,file=doc)
-    print('='*36,file=doc)
+         '='*36)  
 
-    doc.close( )
-
-    
-    
-    if not os.path.exists('./results/%s/Score(%.3f)W(%s)OP_factor(%s)one-hot(%s)RMSE(%.3f).txt'
-              %(dataset_name,score,window_size,is_op_factor,is_one_hot,np.sqrt(mse))):
-        os.rename('./results/%s/2.txt'
-                  %(dataset_name),'./results/%s/Score(%.3f)W(%s)OP_factor(%s)one-hot(%s)RMSE(%.3f).txt'
-                  %(dataset_name,score,window_size,is_op_factor,is_one_hot,np.sqrt(mse)),)
-        print("performace results have been saved!")
-            # save results : predicted RUL and Real RUL
-        dataframe = pd.DataFrame({'predictede RUL':results['Predicted_RUL'],'real_RUL':results['True_RUL']})
-        
-        # save the reults about 'predicted RUL' and 'real RUL'
-        dataframe.to_csv("./results/%s/Test results_Score%.4fRMSE%.4f.csv"%(dataset_name,score,np.sqrt(mse)),sep=',')
-        df_test.to_csv('./results/{}/All resutls_Score{:.4f}RMSE{:.4f}.csv'.format(dataset_name,score,np.sqrt(mse)))
-        
-        print("RUL results have been saved",'\n')
-    else:
-        print('similary results!')
-    
-
-    # dataframe = pd.DataFrame({'predictede RUL':results['Predicted_RUL'],'real_RUL':results['True_RUL']})        
-    # # save the reults about 'predicted RUL' and 'real RUL'
-    # dataframe.to_csv("./results/%s/Test results_Score%.4fRMSE%.4f.csv"%(dataset_name,score,np.sqrt(mse)),sep=',')
-    # print("RUL results have been saved",'\n')
+    dataframe = pd.DataFrame({'predictede RUL':results['Predicted_RUL'],'real_RUL':results['True_RUL']})        
+    # save the reults about 'predicted RUL' and 'real RUL'
+    dataframe.to_csv("./results/%s/Test results_Score%.4fRMSE%.4f.csv"%(dataset_name,score,np.sqrt(mse)),sep=',')
+    print("RUL results have been saved",'\n')
 
 
