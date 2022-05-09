@@ -89,8 +89,8 @@ class Preprocessing(object):
         self.train_data.set_index(['dataset_id','unit_id'],inplace=True,drop=True)
         self.test_data.set_index(['dataset_id','unit_id'],inplace=True,drop=True)
         
-        self.train_data.to_csv('./data/{}/train_oppp.csv'.format(self.dataset_name))
-        self.test_data.to_csv('./data/{}/test_oppp.csv'.format(self.dataset_name))
+        self.train_data.to_csv('./data/{}/train_op.csv'.format(self.dataset_name))
+        self.test_data.to_csv('./data/{}/test_op.csv'.format(self.dataset_name))
 
 #preprocess = Preprocessing(dataset_name='FD002')
     
