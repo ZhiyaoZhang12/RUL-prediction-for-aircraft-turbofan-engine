@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
 
-'''
-cell2
-'''
 import sys, traceback, os, re
 import torch
 import numpy as np
@@ -36,8 +33,6 @@ def accuracy_function(df, label, alpha1=13, alpha2=10):
     if df[label]<-alpha1 or df[label]>alpha2:
         return 0
     return 1
-
-
 
 
 class Trainer(object):
@@ -196,10 +191,6 @@ class Trainer(object):
                     patience_step = 0
                     self.save('Model_Checkpoint' + str(epoch + 1) + '_valid_loss_' + str(best_validation_loss) + '.pth')
                     
-                    doc=open('./results/%s/2.txt'%(self.dataset_name),'a')
-                    print('{} epoch, validation_loss'.format(epoch + 1), validation_loss,file=doc)
-                    doc.close()
-                    
                     ## ealy stop (added in 2021.0817)
                     if epoch >= 1:
                         if best_validation_loss/previous_best_loss < 0.1:
@@ -208,9 +199,7 @@ class Trainer(object):
                             print('-------------------------- early stop! --------------------------',file=doc)
                             doc.close()
                             return best_validation_loss
-                            
-                    
-                    
+                                                                 
                 else:
                     patience_step += 1
                     if patience_step >= patience:
@@ -241,7 +230,6 @@ class Trainer(object):
                     batch_train) + '_batch_valid_' + str(batch_valid) + '.pth')
             traceback.print_exc(file=sys.stdout)
             sys.exit(0)
-
 
 
     def predict(self):
@@ -306,8 +294,7 @@ class Trainer(object):
         for file in files:
             number = re.findall('[-+]?[.]?[\d]+(?:,\d\d\d)*[\.]?\d*(?:[eE][-+]?\d+)?', file)
 #             print(number)
-            result = float(number[-1])
-        
+            result = float(number[-1])      
         
             if result < best:
                 best = result                    
