@@ -195,9 +195,6 @@ class Trainer(object):
                     if epoch >= 1:
                         if best_validation_loss/previous_best_loss < 0.1:
                             print('-------------------------- early stop! --------------------------')
-                            doc=open('./results/%s/2.txt'%(self.dataset_name),'a')
-                            print('-------------------------- early stop! --------------------------',file=doc)
-                            doc.close()
                             return best_validation_loss
                                                                  
                 else:
