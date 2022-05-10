@@ -201,12 +201,7 @@ class Trainer(object):
                     patience_step += 1
                     if patience_step >= patience:
                         print('Train is donne, {} epochs in a row without improving validation loss!'.format(patience))
-                        
-                        doc=open('./results/%s/2.txt'
-                             %(self.dataset_name),'a')
-                        print('\n','best_validation_loss', best_validation_loss,file=doc)
-                        doc.close()
-                        
+                                             
                         print('\n',"best_validation_loss have been saved")
         
                         return best_validation_loss
